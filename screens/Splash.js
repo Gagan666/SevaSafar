@@ -3,24 +3,27 @@ import React, { useEffect } from 'react';
 import { Text, View,StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useState } from 'react';
 
 function Splash(props) {
+
     useEffect(() => {
-        const clearStoredData = async () => {
-          try {
-            // Check if the value exists in AsyncStorage
-            const storedValue = await AsyncStorage.getItem('selectedRole');
-            if (storedValue) {
-              // Clear the value if it exists
-              await AsyncStorage.removeItem('selectedRole');
-            }
-          } catch (error) {
-            console.error('Error clearing data:', error);
+
+      async function checkAuthenticationStatus() {
+        try {
+          const userToken = await AsyncStorage.getItem('userID');
+          if (userToken!=null) {
+            // User is authenticated based on the value in AsyncStorage
+            navigation.navigate('Chats')
           }
-        };
-    
-        clearStoredData();
+
+        } catch (error) {
+          console.error('Error checking authentication status:', error);
+        }
+      
+      }
+  
+      checkAuthenticationStatus();
       }, []);
     
     const navigation = useNavigation();
@@ -38,8 +41,8 @@ function Splash(props) {
     return (
         <View style={styles.container}>
             <Text style={styles.logo}>FireBase Chat App</Text>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('agency');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Agent</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('survivor');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Survivor</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Agency');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Agent</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Survivor');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Survivor</Text></TouchableOpacity>
 
         </View>
     );

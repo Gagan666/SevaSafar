@@ -1,46 +1,85 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useState,useEffect  } from "react";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-import { auth } from "../firebase";
+// import { auth } from "../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+import firebase from 'firebase/compat/app'; // Import the Firebase app module
+import 'firebase/compat/auth';
+import { Alert } from "react-native";
 
 function Login(props) {
-  const entity = AsyncStorage.getItem('selectedRole');
-  console.log(entity)
+  
     const [email, setEmail] = useState("");
 
     const [pass, setPass] = useState("");
+    const[entity,setEntity] = useState("");
     const navigation = useNavigation();
+    useEffect(() => {
+      //getting agency or survivor roles
+      const getStoredValue = async () => {
+        try {
+          const value = await AsyncStorage.getItem('selectedRole');
+          const aut = await AsyncStorage.getItem('userID');
+          if(aut!=null)
+          navigation.navigate('Chats')
+          if (value !== null) {
+            setEntity(value);
+          }
+        } catch (error) {
+          console.error('Error getting data:', error);
+        }
+      };
+        getStoredValue();
+    }, []);
 
-    const handleLogin = ()=>{
-        auth
-            .createUserWithEmailAndPassword(email, pass)
-            .then(() => {
-                console.log('User account created & signed in!');
-            })
-            .catch(error => {
-                if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
-                }
+    // console.log(entity)
+    const handleLogin = async () => {
+      try {
+        // Check if the email is present in the database
+        const emailExists = await checkIfEmailExists(email);
+  
+        if (emailExists) {
+          const userCredential = await firebase.auth().signInWithEmailAndPassword(email, pass);
+          // User has successfully logged in
+          // Navigate to the Maps screen
+          const user = userCredential.user;
+      
+      // Store the user ID in AsyncStorage
+        await AsyncStorage.setItem('userID', user.uid);
+        await AsyncStorage.setItem('email', email);
 
-                if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
-                }
-
-                console.error(error);
-            });
-    }
-    console.log(props.params + " login")
+        // console.log(user.uid)
+          navigation.navigate('Chats');
+        } else {
+          // Display an alert if the email is not found in the database
+          Alert.alert('Error', 'Email not found in the database');
+        }
+      } catch (error) {
+        // Display an alert for login errors
+        Alert.alert('Error', error.message);
+      }
+    };
+  
+    const checkIfEmailExists = async (email) => {
+      try {
+        const querySnapshot = await firebase.firestore().collection(entity).where('email', '==', email).get();
+        return !querySnapshot.empty;
+      } catch (error) {
+        console.error('Error checking email existence:', error);
+        return false;
+      }
+    };
+  
+   
     return (
         <KeyboardAvoidingView style={styles.container}>
 
         
         <View>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>{entity} Login</Text>
     
       <TextInput
         placeholder="Enter Email"
