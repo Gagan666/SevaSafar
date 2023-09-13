@@ -8,6 +8,10 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { Alert } from "react-native";
+import MapView, { Marker } from 'react-native-maps';
+import Geolocation from 'react-native-geolocation-service';
+import * as Location from 'expo-location';
+import { ScrollView } from "react-native-gesture-handler";
 
 function SignUp(props) {
   const [name, setName] = useState("");
@@ -17,9 +21,12 @@ function SignUp(props) {
   const [ConfPass, setConfPass] = useState("");
   const navigation = useNavigation();
   const [entity, setEntity] = useState('');
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
   //entity is either agency or survivor based on the buttton clickeed
 
   useEffect(() => {
+    
+    
     const getStoredValue = async () => {
       try {
         const value = await AsyncStorage.getItem('selectedRole');
@@ -39,8 +46,28 @@ function SignUp(props) {
   }, []);
   
   
+  const getCurrentLocation = async () => {
+     let { status } = await Location.requestForegroundPermissionsAsync();
 
-  // console.log(entity)
+    if(status=='granted'){
+      console.log("yes")
+      const location = await Location.getCurrentPositionAsync({});
+      const locCoor = {
+        latitude:location.coords.latitude,
+        longitude:location.coords.longitude
+      }
+      setLocation(locCoor)
+      console.log('Current location:', location.coords);
+    }
+    else{
+      console.log("No permissions");
+    }
+    
+  };
+
+  useEffect(()=>{
+      // getCurrentLocation();
+  },[])
 
   const handleSignup = async () => {
     try {
@@ -59,6 +86,7 @@ function SignUp(props) {
             name,
             email,
             mobile,
+            location
           };
           console.log(userDetails)
           await firebase.firestore().collection(entity).doc(user.uid).set(userDetails);
@@ -87,86 +115,100 @@ function SignUp(props) {
 
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+  
+    <View style={{marginTop:10,flex:1}}>
+    <ScrollView contentContainerStyle={styles.container}>
     
-    <View>
-    
-    <Text style={styles.title}>{entity} SignUp</Text>
-      
+    <Text style={styles.header}>Agency Registration</Text>
       <TextInput
-        placeholder="Enter Name"
-        style={[{ marginTop: 50 }, styles.input]}
+        style={styles.input}
+        placeholder="Agency Name"
         value={name}
-        onChangeText={(txt) => setName(txt)}
+        onChangeText={(text) => setName(text)}
       />
       <TextInput
-        placeholder="Enter Email"
-        style={[{ marginTop: 20 }, styles.input]}
+        style={styles.input}
+        placeholder="Agency Email"
         value={email}
-        onChangeText={(txt) => setEmail(txt)}
+        onChangeText={(text) => setEmail(text)}
       />
       <TextInput
-        placeholder="Enter Mobile"
-        style={[{ marginTop: 20 }, styles.input]}
-        keyboardType={"number-pad"}
+        style={styles.input}
+        placeholder="Agency Mobile Number"
         value={mobile}
-        onChangeText={(txt) => setMobile(txt)}
+        onChangeText={(text) => setMobile(text)}
       />
       <TextInput
-        placeholder="Enter Password"
-        style={[{ marginTop: 20 }, styles.input]}
+        style={styles.input}
+        placeholder="Password"
+        secureTextEntry={true}
         value={pass}
-        onChangeText={(txt) => setPass(txt)}
+        onChangeText={(text) => setPass(text)}
       />
       <TextInput
-        placeholder="Enter Confirm Password"
-        style={[{ marginTop: 20 }, styles.input]}
+        style={styles.input}
+        placeholder="Confirm Password"
+        secureTextEntry={true}
         value={ConfPass}
-        onChangeText={(txt) => setConfPass(txt)}
+        onChangeText={(text) => setConfPass(text)}
       />
-      <TouchableOpacity style={styles.btn} onPress={handleSignup}>
+      <Text style={{width: "90%",alignSelf: "center",marginTop:20,fontSize: 20,
+    fontWeight: 'bold',}}>Enter Location <TouchableOpacity onPress={getCurrentLocation} style={styles.button}></TouchableOpacity></Text>
+      <MapView
+        style={styles.map}
+        region={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.00222,
+          longitudeDelta: 0.00221,
+        }}
+        onPress={(e) => {console.log("pressed");setLocation(e.nativeEvent.coordinate)}}
+      ><Marker coordinate={location} /></MapView>
+      
+      <TouchableOpacity style={styles.SignUpbtn} onPress={handleSignup}>
         <Text style={styles.btn_txt}>Sign Up</Text>
       </TouchableOpacity>
       <Text style={styles.orLogin} onPress={()=>{navigation.navigate("Login",{propKey:entity})}}>
         Or Login
       </Text>
+    </ScrollView>
     </View>
-        
-    </KeyboardAvoidingView>
+
   );
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "white",
+    flexGrow: 1,
+    alignItems: 'center',
+    padding: 40,
   },
-  title: {
-    fontSize: 40,
-    color: "black",
-    alignSelf: "center",
-    marginTop: 100,
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   input: {
-    width: "90%",
-    borderWidth: 0.5,
+    width: '100%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'gray',
+    marginBottom: 20,
+    paddingHorizontal: 10,
     borderRadius: 10,
-    alignSelf: "center",
-    height: 50,
-    paddingLeft: 20,
   },
-  btn: {
-    width: "90%",
-    height: 50,
+  map: {
+    width: '100%',
+    height: 200,
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
     borderRadius: 10,
-    alignSelf: "center",
-    marginTop: 50,
-    backgroundColor: "orange",
-    alignItems: "center",
-    justifyContent: "center",
   },
-  btn_txt: {
-    fontSize: 20,
-    color: "black",
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
   },
   orLogin: {
     fontSize: 20,
@@ -175,5 +217,15 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     fontWeight: "600",
   },
+  SignUpbtn:{
+    width: "90%",
+      height: 50,
+      borderRadius: 10,
+      alignSelf: "center",
+      marginTop: 50,
+      backgroundColor: "orange",
+      alignItems: "center",
+      justifyContent: "center",
+  }
 });
 export default SignUp;

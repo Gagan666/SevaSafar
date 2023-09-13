@@ -4,6 +4,7 @@ import { Text, View,StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
+import * as Permissions from 'expo-permissions';
 
 function Splash(props) {
 

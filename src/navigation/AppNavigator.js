@@ -41,8 +41,6 @@ function AppNavigator(props) {
                  options={{headerShown:true}}
                 />
                 
-            
-
             </Stack.Navigator>
 
         </NavigationContainer>
