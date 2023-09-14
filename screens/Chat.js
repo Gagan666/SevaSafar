@@ -2,17 +2,23 @@ import React from 'react';
 import { View,Text } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { useEffect,useState,useCallback } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useRoute,useNavigation } from '@react-navigation/native';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import checkLoginStatus from '../functions/checkLoginStatus';
 
 function Chat(props) {
 
+  const navigation = useNavigation();
     const [messages, setMessages] = useState([])
     const route = useRoute();
+
+      checkLoginStatus();
+
     useEffect(() => {
         // console.log(firebase.auth().currentUser.uid)
+        
         const unsubscribe = firebase.firestore()
           .collection('chats')
           .doc(route.params.email+route.params.data.email) // Replace with the chat room ID

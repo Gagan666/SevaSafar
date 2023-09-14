@@ -6,10 +6,9 @@ import SignUp from '../../screens/SignUp'
 import Login from '../../screens/Login';
 import Chats from '../../screens/Chats';
 import Chat from '../../screens/Chat';
-// import AuthenticatedStack from './AuthenticatedStack';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Home from '../../screens/Home';
 const Stack = createStackNavigator()
-import { useState,useEffect } from 'react';
+
 function AppNavigator(props) {
  
     return (
@@ -39,6 +38,11 @@ function AppNavigator(props) {
                 name={'Chat'}
                  component={Chat} 
                  options={{headerShown:true}}
+                />
+                <Stack.Screen 
+                name={'Home'}
+                 component={Home} 
+                 options={{headerShown:false}}
                 />
                 
             </Stack.Navigator>

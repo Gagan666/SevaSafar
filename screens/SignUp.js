@@ -12,6 +12,7 @@ import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 import { ScrollView } from "react-native-gesture-handler";
+import checkLoginStatus from "../functions/checkLoginStatus";
 
 function SignUp(props) {
   const [name, setName] = useState("");
@@ -22,29 +23,18 @@ function SignUp(props) {
   const navigation = useNavigation();
   const [entity, setEntity] = useState('');
   const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
+
   //entity is either agency or survivor based on the buttton clickeed
 
+  const getStoredValue = async () =>{
+    const ent = await AsyncStorage.getItem("selectedRole");
+    setEntity(ent);
+  }
   useEffect(() => {
     
-    
-    const getStoredValue = async () => {
-      try {
-        const value = await AsyncStorage.getItem('selectedRole');
-        const aut = await AsyncStorage.getItem('userID');
-        console.log(aut)
-        if(aut){
-          navigation.replace("Chats");
-        }
-        if (value !== null) {
-          setEntity(value);
-        }
-      } catch (error) {
-        console.error('Error getting data:', error);
-      }
-    };
-      getStoredValue();
+    getStoredValue()
   }, []);
-  
+  checkLoginStatus();
   
   const getCurrentLocation = async () => {
      let { status } = await Location.requestForegroundPermissionsAsync();
@@ -119,7 +109,7 @@ function SignUp(props) {
     <View style={{marginTop:10,flex:1}}>
     <ScrollView contentContainerStyle={styles.container}>
     
-    <Text style={styles.header}>Agency Registration</Text>
+    <Text style={styles.header}>{entity} Registration</Text>
       <TextInput
         style={styles.input}
         placeholder="Agency Name"
@@ -152,23 +142,28 @@ function SignUp(props) {
         value={ConfPass}
         onChangeText={(text) => setConfPass(text)}
       />
-      <Text style={{width: "90%",alignSelf: "center",marginTop:20,fontSize: 20,
-    fontWeight: 'bold',}}>Enter Location <TouchableOpacity onPress={getCurrentLocation} style={styles.button}></TouchableOpacity></Text>
+      <Text style={styles.header}>Enter Location</Text>
+      <TouchableOpacity onPress={getCurrentLocation} style={[styles.button,{marginBottom:20}]}>
+            <Text style={[styles.buttonText]}>Get Current Location</Text>
+          </TouchableOpacity>
+    
       <MapView
         style={styles.map}
         region={{
           latitude: location.latitude,
           longitude: location.longitude,
-          latitudeDelta: 0.00222,
-          longitudeDelta: 0.00221,
+          latitudeDelta: 0.00022,
+          longitudeDelta: 0.00121,
         }}
-        onPress={(e) => {console.log("pressed");setLocation(e.nativeEvent.coordinate)}}
+        onPress={(e) => {
+          console.log("Pressed")
+          setLocation(e.nativeEvent.coordinate)}}
       ><Marker coordinate={location} /></MapView>
       
       <TouchableOpacity style={styles.SignUpbtn} onPress={handleSignup}>
         <Text style={styles.btn_txt}>Sign Up</Text>
       </TouchableOpacity>
-      <Text style={styles.orLogin} onPress={()=>{navigation.navigate("Login",{propKey:entity})}}>
+      <Text style={styles.orLogin} onPress={()=>{navigation.replace("Login",{propKey:entity})}}>
         Or Login
       </Text>
     </ScrollView>

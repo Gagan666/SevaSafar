@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase/compat/app'; // Import the Firebase app module
 import 'firebase/compat/auth';
 import { Alert } from "react-native";
+import checkLoginStatus from "../functions/checkLoginStatus";
 
 function Login(props) {
   
@@ -17,25 +18,17 @@ function Login(props) {
     const [pass, setPass] = useState("");
     const[entity,setEntity] = useState("");
     const navigation = useNavigation();
+    
+    const getStoredValue = async () =>{
+      const ent = await AsyncStorage.getItem("selectedRole");
+      setEntity(ent);
+    }
     useEffect(() => {
-      //getting agency or survivor roles
-      const getStoredValue = async () => {
-        try {
-          const value = await AsyncStorage.getItem('selectedRole');
-          const aut = await AsyncStorage.getItem('userID');
-          if(aut!=null)
-          navigation.navigate('Chats')
-          if (value !== null) {
-            setEntity(value);
-          }
-        } catch (error) {
-          console.error('Error getting data:', error);
-        }
-      };
-        getStoredValue();
+      
+      getStoredValue()
     }, []);
-
-    // console.log(entity)
+    checkLoginStatus();
+    // console.log("##"+entity)
     const handleLogin = async () => {
       try {
         // Check if the email is present in the database
@@ -50,9 +43,9 @@ function Login(props) {
       // Store the user ID in AsyncStorage
         await AsyncStorage.setItem('userID', user.uid);
         await AsyncStorage.setItem('email', email);
-
+        await AsyncStorage.setItem('pass', pass);
         // console.log(user.uid)
-          navigation.navigate('Chats');
+          navigation.replace('Home');
         } else {
           // Display an alert if the email is not found in the database
           Alert.alert('Error', 'Email not found in the database');
@@ -64,6 +57,7 @@ function Login(props) {
     };
   
     const checkIfEmailExists = async (email) => {
+      console.log(entity)
       try {
         const querySnapshot = await firebase.firestore().collection(entity).where('email', '==', email).get();
         return !querySnapshot.empty;

@@ -7,9 +7,13 @@ import firebase from 'firebase/compat/app'; // Import the Firebase app modle
 import 'firebase/compat/auth'; 
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
+import checkLoginStatus from '../functions/checkLoginStatus';
+
+
 
 function Chats(props) {
   navigation=useNavigation()
+  checkLoginStatus();
   const handleLogout = async () => {
     try {
       await firebase.auth().signOut();

@@ -1,31 +1,27 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 import { Text, View,StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
+import firebase from 'firebase/compat/app'; // Import the Firebase app modle
+import 'firebase/compat/auth'; 
+import checkLoginStatus from '../functions/checkLoginStatus';
 import * as Permissions from 'expo-permissions';
 
 function Splash(props) {
+  const [entity, setEntity] = useState('');
+  async function checkAuthenticationStatus() {
+    if(firebase.auth().currentUser!=null)
+    navigation.replace('Home')
+  }
+  useFocusEffect(
+    React.useCallback(() => {
 
-    useEffect(() => {
-
-      async function checkAuthenticationStatus() {
-        try {
-          const userToken = await AsyncStorage.getItem('userID');
-          if (userToken!=null) {
-            // User is authenticated based on the value in AsyncStorage
-            navigation.navigate('Chats')
-          }
-
-        } catch (error) {
-          console.error('Error checking authentication status:', error);
-        }
-      
-      }
-  
-      checkAuthenticationStatus();
-      }, []);
+        checkAuthenticationStatus();
+    }, [])
+  );
+  checkLoginStatus();
     
     const navigation = useNavigation();
     const storeData = async (value) => {
@@ -35,15 +31,14 @@ function Splash(props) {
         } catch (error) {
           console.error('Error storing data:', error);
         }
-        const entity = AsyncStorage.getItem('selectedRole');
         
       };
     
     return (
         <View style={styles.container}>
             <Text style={styles.logo}>FireBase Chat App</Text>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Agency');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Agent</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Survivor');navigation.navigate("SignUp")}}><Text style={styles.btn_txt}>Survivor</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Agency');navigation.navigate("SignUp",{entity:"Agency"})}}><Text style={styles.btn_txt}>Agent</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Survivor');navigation.navigate("SignUp",{entity:"Survivor"})}}><Text style={styles.btn_txt}>Survivor</Text></TouchableOpacity>
 
         </View>
     );
