@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState,useEffect } from "react";
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
@@ -16,7 +16,9 @@ import checkLoginStatus from "../functions/checkLoginStatus";
 import { LinearGradient } from 'expo-linear-gradient';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-function SignUp(props) {
+function SignUp2(props) {
+    let route = useRoute();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
@@ -58,7 +60,13 @@ function SignUp(props) {
   };
 
   useEffect(()=>{
-      // getCurrentLocation();
+      setName(route.params.name)
+      setEmail(route.params.email)
+      setMobile(route.params.mobile)
+      setPass(route.params.pass)
+      setConfPass(route.params.confPass)
+      setEntity(route.params.entity)
+
   },[])
 
   const handleSignup = async () => {
@@ -121,64 +129,14 @@ function SignUp(props) {
 
     <View style={styles.contents}>
 
-      <View style={styles.input}>
-      <IonIcon name="person" size={35} color="black" />
-      <TextInput
-        style={{marginLeft: 15, fontSize: 18}}
-        placeholder="Name"
-        value={name}
-        onChangeText={(text) => setName(text)}
-      />
-      </View>
+      
 
-      <View style={styles.input}>
-      <IonIcon name="mail" size={35} color="black" />
-      <TextInput
-        style={{marginLeft: 15, fontSize: 18}}
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      </View>
-
-      <View style={styles.input}>
-      <IonIcon name="call" size={35} color="black" />
-      <TextInput
-        style={{marginLeft: 15, fontSize: 18}}
-        placeholder="Mobile Number"
-        value={mobile}
-        onChangeText={(text) => setMobile(text)}
-      />
-      </View>
-
-      <View style={styles.input}>
-      <IonIcon name="key" size={35} color="black" />
-      <TextInput
-        style={{marginLeft: 15, fontSize: 18}}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={pass}
-        onChangeText={(text) => setPass(text)}
-      />
-      </View>
-
-      <View style={styles.input}>
-      <IonIcon name="key" size={35} color="black" />
-      <TextInput
-        style={{marginLeft: 15, fontSize: 18}}
-        placeholder="Confirm Password"
-        secureTextEntry={true}
-        value={ConfPass}
-        onChangeText={(text) => setConfPass(text)}
-      />
-      </View>
-
-      {/* <Text style={[styles.locheading]}>Enter Location</Text>
+      <Text style={[styles.locheading]}>Enter Location</Text>
       <TouchableOpacity style={styles.button} onPress={getCurrentLocation} >
         <Text style={styles.text}>Get Current Location</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
-      {/* <MapView
+      <MapView
         style={styles.map}
         region={{
           latitude: location.latitude,
@@ -189,23 +147,11 @@ function SignUp(props) {
         onPress={(e) => {
           console.log("Pressed")
           setLocation(e.nativeEvent.coordinate)}}
-      ><Marker coordinate={location} /></MapView> */}
-      {entity=="Survivor" ? (
-        <TouchableOpacity style={styles.button} onPress={handleSignup}>
+      ><Marker coordinate={location} /></MapView>
+      
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
         <Text style={styles.text}>Register</Text>
       </TouchableOpacity>
-      ) : (
-         (
-          <TouchableOpacity style={styles.button} onPress={()=>navigation.navigate("SignUp2",{name:name,mobile:mobile,email:email,pass:pass,confPass:ConfPass,entity:entity})}>
-        <Text style={styles.text}>Next</Text>
-      </TouchableOpacity>
-        )
-      )}
-      
-
-      
-
-
       <Text style={styles.donthaveaccount}>Already have an account?</Text>
       <Text style={styles.orLogin} onPress={()=>{navigation.replace("Login",{propKey:entity})}}>
         Login
@@ -314,4 +260,4 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
 });
-export default SignUp;
+export default SignUp2;
