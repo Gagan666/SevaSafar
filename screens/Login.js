@@ -83,23 +83,24 @@ function Login(props) {
           </View>
           <View style={styles.loginpart}>
           {/* <Text style={styles.title}>{entity.toUpperCase()}{" "} LOGIN</Text> */}
-          <Text style={styles.title}>Be part of a community</Text>
+          {entity === 'Survivor'? (<Text style={styles.title}>Need Help?</Text>) : (<Text style={styles.title}>Be part of a community</Text>)}
           
-          <View style={styles.inputSection}>
-          <IonIcon name="mail" size={35} color="black" style={styles.vector}/>
+          <View style={styles.input}>
+          <IonIcon name="mail" size={20} color="black" style={styles.icon}/>
           <TextInput
             placeholder="Email"
-            style={[ styles.input]}
+            style={{marginLeft: 15, fontSize: 18}}
             value={email}
             onChangeText={txt=>setEmail(txt)}
           />
           </View>
 
-          <View style={styles.inputSection}>
-          <IonIcon name="key" size={35} color="black" />
+          <View style={styles.input}>
+          <IonIcon name="key" size={20} color="black" style={styles.icon}/>
           <TextInput
             placeholder="Password"
-            style={[styles.input]}
+            secureTextEntry={true}
+            style={{marginLeft: 15, fontSize: 18}}
             value={pass}
             onChangeText={txt=>setPass(txt)}
           />
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: "black",
       alignSelf: "center",
-      marginBottom: 25,
+      marginBottom: 10,
     },
     loginpart: {
       borderTopRightRadius: 20,
@@ -153,28 +154,40 @@ const styles = StyleSheet.create({
       borderBottomLeftRadius: 20,
       marginBottom: 15,
     },
-    inputSection:{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginVertical: 8,
-        // backgroundColor: '#fff',
-    },
+    // inputSection:{
+    //     // flex: 1,
+    //     flexDirection: 'row',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     marginVertical: 8,
+    //     // backgroundColor: '#fff',
+        
+    // },
+    // // input: {
+    //   width:"70%",
+    //   flexDirection: 'row',
+    // borderRadius: 8,
+    // paddingHorizontal: 8,
+    // marginBottom: 2,
+    // borderBottomColor: '#ccc',
+    // borderBottomWidth: 1,
+    // height: 50,
+    // fontSize: 18,
+    // },
     input: {
-      width: "73%",
-      borderWidth: 0.8,
-      borderRadius: 20,
-      alignSelf: "center",
-      height: 40,
-      paddingLeft: 20,
-      // textAlign:'center',
-      fontSize: 20,
-      marginHorizontal:10,
-      marginVertical: 0,
+      width: '80%',
+      alignSelf:'center',
+      flexDirection: 'row',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+    height: 50,
+    fontSize: 18,
     },
     button: {
-      marginTop: 25,
+      marginTop: 18,
       padding: 10,
       height: 50,
       width: 150,
@@ -182,12 +195,12 @@ const styles = StyleSheet.create({
       marginHorizontal: 10,
       justifyContent: 'center',
       alignSelf: "center",
-      elevation: 6,
+      elevation: 3,
       backgroundColor: '#4de6f6',
     },
     text: {
       fontSize: 20,
-      color: '#000',
+      color: 'white',
       justifyContent: 'center',
       alignSelf: "center",
       paddingHorizontal: 10,
@@ -196,7 +209,7 @@ const styles = StyleSheet.create({
     donthaveaccount: {
       fontSize: 19,
       alignSelf: 'center',
-      marginTop: 30,
+      marginTop: 20,
     },
     orLogin: {
       fontSize: 24,
@@ -204,5 +217,8 @@ const styles = StyleSheet.create({
       marginTop: 2,
       // textDecorationLine: "underline",
       fontWeight: "bold",
+    },
+    icon: {
+      marginTop: 15,
     },
   });

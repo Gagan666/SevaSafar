@@ -122,7 +122,7 @@ function SignUp(props) {
     <View style={styles.contents}>
 
       <View style={styles.input}>
-      <IonIcon name="person" size={35} color="black" />
+      <IonIcon name="person" size={20} color="black" style={styles.icon}/>
       <TextInput
         style={{marginLeft: 15, fontSize: 18}}
         placeholder="Name"
@@ -132,7 +132,7 @@ function SignUp(props) {
       </View>
 
       <View style={styles.input}>
-      <IonIcon name="mail" size={35} color="black" />
+      <IonIcon name="mail" size={20} color="black" style={styles.icon}/>
       <TextInput
         style={{marginLeft: 15, fontSize: 18}}
         placeholder="Email"
@@ -142,7 +142,7 @@ function SignUp(props) {
       </View>
 
       <View style={styles.input}>
-      <IonIcon name="call" size={35} color="black" />
+      <IonIcon name="call" size={20} color="black" style={styles.icon}/>
       <TextInput
         style={{marginLeft: 15, fontSize: 18}}
         placeholder="Mobile Number"
@@ -152,7 +152,7 @@ function SignUp(props) {
       </View>
 
       <View style={styles.input}>
-      <IonIcon name="key" size={35} color="black" />
+      <IonIcon name="key" size={20} color="black" style={styles.icon}/>
       <TextInput
         style={{marginLeft: 15, fontSize: 18}}
         placeholder="Password"
@@ -163,7 +163,7 @@ function SignUp(props) {
       </View>
 
       <View style={styles.input}>
-      <IonIcon name="key" size={35} color="black" />
+      <IonIcon name="key" size={20} color="black" style={styles.icon}/>
       <TextInput
         style={{marginLeft: 15, fontSize: 18}}
         placeholder="Confirm Password"
@@ -278,7 +278,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: '#000',
+    color: '#fff',
+    fontWeight: 'bold',
     justifyContent: 'center',
     alignSelf: "center",
     paddingHorizontal: 10,
@@ -312,6 +313,9 @@ const styles = StyleSheet.create({
     fontSize: 19,
     alignSelf: 'center',
     marginTop: 30,
+  },
+  icon: {
+    marginTop: 15,
   },
 });
 export default SignUp;
