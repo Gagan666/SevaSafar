@@ -1,5 +1,5 @@
 import React from 'react';
-import { View,Text } from 'react-native';
+import { View,Text, StyleSheet } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { useEffect,useState,useCallback } from 'react';
 import { useRoute,useNavigation } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import checkLoginStatus from '../functions/checkLoginStatus';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 function Chat(props) {
 
@@ -75,9 +77,12 @@ function Chat(props) {
 
     return (
         <View style={{flex:1}}>
-            <View style={{ padding: 10, backgroundColor: 'lightgray',alignItems:'center' }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{route.params.data.name}</Text>
-        </View>
+          <LinearGradient colors={['#7af0fc', '#c8faff', '#ffffff']} >
+          <View style={{ padding: 10,alignItems:'center', backgroundColor:'transparent' }}>
+          <IonIcon name="person" size={37} color="black" style={{alignSelf: 'center', marginTop: 28}}/>
+          <Text style={styles.header}>{route.params.data.name}</Text>
+          </View>
+          </LinearGradient>
             <GiftedChat
                 messages={messages}
                 onSend={messages => onSend(messages)}
@@ -90,3 +95,13 @@ function Chat(props) {
 }
 
 export default Chat;
+
+const styles = StyleSheet.create({
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 8,
+    elevation: 5,
+    // backgroundColor: 'transparent'
+  }
+});

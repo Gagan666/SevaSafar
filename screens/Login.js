@@ -1,15 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState,useEffect  } from "react";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 // import { auth } from "../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import firebase from 'firebase/compat/app'; // Import the Firebase app module
 import 'firebase/compat/auth';
 import { Alert } from "react-native";
 import checkLoginStatus from "../functions/checkLoginStatus";
+import IonIcon from 'react-native-vector-icons/Ionicons';
+
 
 function Login(props) {
   
@@ -69,32 +72,51 @@ function Login(props) {
   
    
     return (
-        <KeyboardAvoidingView style={styles.container}>
+      <ScrollView style={styles.container}>
 
-        
-        <View>
-      <Text style={styles.title}>{entity} Login</Text>
-    
-      <TextInput
-        placeholder="Enter Email"
-        style={[{ marginTop: 20 }, styles.input]}
-        value={email}
-        onChangeText={txt=>setEmail(txt)}
-      />
-     
-      <TextInput
-        placeholder="Enter Password"
-        style={[{ marginTop: 20 }, styles.input]}
-        value={pass}
-        onChangeText={txt=>setPass(txt)}
-      />
+          <View>
+          {/* <Image source={require("../assets/images/logo.png")} style={styles.appLogo} /> */}
+          <Image
+              source={require("../assets/images/loginImage(1).png")}  
+              style={styles.backgroundImage} 
+          />
+          </View>
+          <View style={styles.loginpart}>
+          {/* <Text style={styles.title}>{entity.toUpperCase()}{" "} LOGIN</Text> */}
+          <Text style={styles.title}>Be part of a community</Text>
+          
+          <View style={styles.inputSection}>
+          <IonIcon name="mail" size={35} color="black" style={styles.vector}/>
+          <TextInput
+            placeholder="Email"
+            style={[ styles.input]}
+            value={email}
+            onChangeText={txt=>setEmail(txt)}
+          />
+          </View>
+
+          <View style={styles.inputSection}>
+          <IonIcon name="key" size={35} color="black" />
+          <TextInput
+            placeholder="Password"
+            style={[styles.input]}
+            value={pass}
+            onChangeText={txt=>setPass(txt)}
+          />
+          </View>
       
-      <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-        <Text style={styles.btn_txt}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.orLogin} onPress={()=>{navigation.navigate("SignUp")}}>Or SignUp</Text>
-    </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <View>
+              <Text style={styles.text}>LOGIN</Text>
+            </View>
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.donthaveaccount}>Don't have an account?</Text>
+          <Text style={styles.orLogin} onPress={()=>{navigation.navigate("SignUp")}}>SignUp</Text>
+          </View>
+          </View>
+
+      </ScrollView>
     );
 }
 
@@ -105,38 +127,82 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
     },
     title: {
-      fontSize: 40,
+      fontSize: 28,
+      fontWeight: 'bold',
       color: "black",
       alignSelf: "center",
-      marginTop: 100,
+      marginBottom: 25,
+    },
+    loginpart: {
+      borderTopRightRadius: 20,
+      borderTopLeftRadius: 20,
+    },
+    // appLogo: {
+    //   alignSelf: 'flex-end',
+    //   height: 120,
+    //   width: 120,
+    //   marginTop: 30,
+    //   marginRight: 10,
+    //   // position: 'absolute',
+    // },
+    backgroundImage: {
+      justifyContent:'center',
+      width: '100%',
+      height: 500, 
+      borderBottomRightRadius: 20,
+      borderBottomLeftRadius: 20,
+      marginBottom: 15,
+    },
+    inputSection:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 8,
+        // backgroundColor: '#fff',
     },
     input: {
-      width: "90%",
-      borderWidth: 0.5,
-      borderRadius: 10,
+      width: "73%",
+      borderWidth: 0.8,
+      borderRadius: 20,
       alignSelf: "center",
-      height: 50,
+      height: 40,
       paddingLeft: 20,
-    },
-    btn: {
-      width: "90%",
-      height: 50,
-      borderRadius: 10,
-      alignSelf: "center",
-      marginTop: 50,
-      backgroundColor: "orange",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    btn_txt: {
+      // textAlign:'center',
       fontSize: 20,
-      color: "black",
+      marginHorizontal:10,
+      marginVertical: 0,
+    },
+    button: {
+      marginTop: 25,
+      padding: 10,
+      height: 50,
+      width: 150,
+      borderRadius: 30,
+      marginHorizontal: 10,
+      justifyContent: 'center',
+      alignSelf: "center",
+      elevation: 6,
+      backgroundColor: '#4de6f6',
+    },
+    text: {
+      fontSize: 20,
+      color: '#000',
+      justifyContent: 'center',
+      alignSelf: "center",
+      paddingHorizontal: 10,
+      fontWeight: 'bold',
+    },
+    donthaveaccount: {
+      fontSize: 19,
+      alignSelf: 'center',
+      marginTop: 30,
     },
     orLogin: {
-      fontSize: 20,
+      fontSize: 24,
       alignSelf: "center",
-      marginTop: 50,
-      textDecorationLine: "underline",
-      fontWeight: "600",
+      marginTop: 2,
+      // textDecorationLine: "underline",
+      fontWeight: "bold",
     },
   });

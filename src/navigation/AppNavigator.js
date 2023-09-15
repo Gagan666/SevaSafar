@@ -38,7 +38,7 @@ function AppNavigator(props) {
                 <Stack.Screen 
                 name={'Chat'}
                  component={Chat} 
-                 options={{headerShown:true}}
+                 options={{headerShown:false}}
                 />
                 <Stack.Screen 
                 name={'Home'}
