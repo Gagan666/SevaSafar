@@ -8,12 +8,12 @@ import checkLoginStatus from '../functions/checkLoginStatus';
 import Chats from './Chats';
 import Setting from '../tabs/Setting';
 import Maps from './Maps';
-
+import Bell from '../tabs/Bell';
 //Screen names
 const mapsName = "Maps";
 const chatName = "Chats";
 const settingsName = "Settings";
-
+const alerts = "Alert"
 const Tab = createBottomTabNavigator();
 
 function Home() {
@@ -41,6 +41,8 @@ function Home() {
 
             } else if (rn === settingsName) {
               iconName = focused ? 'settings' : 'settings-outline';
+            }else if (rn === alerts) {
+              iconName = focused ? 'notifications' : 'notifications-outline';
             }
 
             // You can return any component that you like here!
@@ -52,6 +54,7 @@ function Home() {
         <Tab.Screen name={mapsName} component={Maps} options={{headerShown:false}}/>
         <Tab.Screen name={chatName} component={Chats} options={{headerShown:false}}/>
         <Tab.Screen name={settingsName} component={Setting} options={{headerShown:false}}/>
+        <Tab.Screen name={alerts} component={Bell} options={{headerShown:false}}/>
 
       </Tab.Navigator>
     

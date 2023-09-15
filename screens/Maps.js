@@ -1,20 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import React, { useDebugValue, useEffect, useState } from 'react';
+import { View, StyleSheet, Text, ActivityIndicator,TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
+import * as Location from 'expo-location';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 const Maps = () => {
     const [markers, setMarkers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const[location,setLocation]=useState([]);
+    const [entity,setEntity] = useState('');
+    const [isLocationReady, setIsLocationReady] = useState(false);
+    const [help, setHelp] = useState(false);
+
     const initMarkers  = async () =>{
         try {
             setLoading(true);
+            const ent = await AsyncStorage.getItem("selectedRole");
+            setEntity(ent);
           const querySnapshot = await firebase.firestore().collection('Agency').get();
-          const agencies = [];
           const marker = [];
           querySnapshot.forEach((documentSnapshot) => {
             // Access the data of eachdocument
             const data = documentSnapshot.data();
-            console.log(data);
+            // console.log(data);
             if(data?.location){
                 marker.push(data.location);
             }
@@ -30,24 +42,76 @@ const Maps = () => {
             setLoading(false); // Set loading to false when the request is completed
           }
     }
+    const sendSos = async () => {
+      // Assuming you have aFirestore collection called "agencies"
+      const ed ={
+        location: location,
+        userId:firebase.auth().currentUser.uid,
+        message: 'Emergency SOS!',
+        timestamp: new Date().toString(),
+        agencyHelp:false
+       }
+       console.log(ed)
+       
+      await firebase.firestore().collection('Help').doc(firebase.auth().currentUser.uid).set(ed)
+      const docRef = firebase.firestore().collection('Help').doc(ed.userId);
+      const unsubscribe = docRef.onSnapshot((doc) => {
+        if (doc.exists) {
+          const data = doc.data();
+          const accept = data.agencyHelp || false; // Default to false if "accept" is not present
+          console.log("%"+accept)
+          // Update the state based on the "accept" value
+          if(accept)
+          setMarkers([data.location,data.agencyLocation])
+        console.log(markers)
+        }
+      });
+      return () => unsubscribe();
+    };
+    // 
+    const getCurrentLocation = async () => {
+      try{
+        setLoading(true)
+        let { status } = await Location.requestForegroundPermissionsAsync();
+    
+       if(status=='granted'){
+         console.log("yes")
+         const loc = await Location.getCurrentPositionAsync({});
+         console.log("asda"+loc)
+        //  const locCoor = {
+        //    latitude:loc.coords.latitude, 
+        //    longitude:loc.coords.longitude,
+        //  }
+         setLocation({
+          latitude:loc.coords.latitude,
+          longitude:loc.coords.longitude
+        })
+        console.log(location)
+        // setIsLocationReady(true);
+        //  console.log(locCoor);
+         
+        //  console.log('Current location=>', emergencyDetails);
+       }
+       else{
+         console.log("No permissions");
+       }
+      //  
+      }
+      catch(error){
+        console.error('Error fetching data: ', error);
+      }
+      finally{
+        setLoading(false);
+      }
+      
+   };
     useEffect(() => {
+       getCurrentLocation();
+
         initMarkers();
       }, []);
-    // const markers = [
-    //     {
-    //       latitude: 37.78825,
-    //       longitude: -122.4324,
-    //       title: 'Marker 1',
-    //       description: 'This is Marker 1',
-    //     },
-    //     {
-    //       latitude: 37.77845,
-    //       longitude: -122.4424,
-    //       title: 'Marker 2',
-    //       description: 'This is Marker 2',
-    //     },
-    //     // Add more markers as needed
-    //   ];
+    
+
   return (
     <View style={styles.container}>
       {/* Navbar */}
@@ -56,7 +120,9 @@ const Maps = () => {
         {/* Example: */}
         <Text style={styles.navbarText}>My Map App</Text>
       </View>
-      {loading ? (
+
+
+{(loading) ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         markers.length>0 && (
@@ -69,6 +135,12 @@ const Maps = () => {
               longitudeDelta: 0.221,
             }}
           >
+            {/* User location */}
+            <Marker
+            coordinate={location}
+            title="Your Location"
+            description="You are here"
+          />
             {markers.map((marker, index) => (
               <Marker
                 key={index}
@@ -76,14 +148,19 @@ const Maps = () => {
                   latitude: marker.latitude,
                   longitude: marker.longitude,
                 }}
-                title={marker.title}
-                description={marker.description}
+                title={"Agency"}
+                description={"Agency Location"}
               />
             ))}
+            {/*  */}
           </MapView>
+          
         )
       )}
       
+      <TouchableOpacity style={styles.sosButton} onPress={sendSos}>
+        {/* Your SOS button UI */}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -104,6 +181,17 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  sosButton: {
+    position: 'absolute',
+    bottom: 16, // Adjust the position as needed
+    right: 16, // Adjust the position as needed
+    backgroundColor: 'red', // Customize button style
+    borderRadius: 50, // Make it circular
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
