@@ -21,6 +21,9 @@ function Chats(props) {
 
       // Remove the userID value from AsyncStorage
       await AsyncStorage.removeItem('userID');
+      await AsyncStorage.removeItem('email');
+      await AsyncStorage.removeItem('password');
+
       await AsyncStorage.removeItem('selectedRole');
       // Navigate to the login or welcome screen
       navigation.replace('Splash'); // Replace with your login or welcome screen name
