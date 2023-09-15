@@ -15,25 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 function Chats(props) {
   navigation=useNavigation()
   checkLoginStatus();
-  const handleLogout = async () => {
-    try {
-      await firebase.auth().signOut();
-      // User has successfully signed out
-
-      // Remove the userID value from AsyncStorage
-      await AsyncStorage.removeItem('userID');
-      await AsyncStorage.removeItem('email');
-      await AsyncStorage.removeItem('password');
-
-      await AsyncStorage.removeItem('selectedRole');
-      await AsyncStorage.removeItem('email');
-      await AsyncStorage.removeItem('pass');
-      // Navigate to the login or welcome screen
-      navigation.replace('Splash'); // Replace with your login or welcome screen name
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
+ 
 
   return (
     // <View>
@@ -51,9 +33,7 @@ function Chats(props) {
         // Button Linear Gradient
         colors={['#7af0fc', '#c8faff', '#ffffff']}
         > */}
-        <View style={{alignSelf:"flex-end"}}>
-              <Button title="Logout" onPress={handleLogout} />
-        </View> 
+        
         <Users /> 
     {/* </LinearGradient> */}
    </View>

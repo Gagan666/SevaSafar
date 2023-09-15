@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import firebase from 'firebase/compat/app';
@@ -7,8 +7,12 @@ import MapView, { Marker } from 'react-native-maps';
 import { ScrollView } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { async } from '@firebase/util';
+import { func } from 'prop-types';
+import { useNavigation } from '@react-navigation/core';
 const Setting = () => {
+  const navigation = useNavigation();
   const [userDetails, setUserDetails] = useState({
     name: '',
     email: '',
@@ -17,13 +21,42 @@ const Setting = () => {
     // Add other user details here
   });
   const [location,setLocation]=useState({ latitude: 0, longitude: 0 });
+  const [entity, setEntity] = useState('')
+ 
+   const getEntity = async () => {
+    try {
+      const ent = await AsyncStorage.getItem("selectedRole")
+      setEntity(ent)
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+  const handleLogout = async () => {
+    try {
+      await firebase.auth().signOut();
+      // User has successfully signed out
 
+      // Remove the userID value from AsyncStorage
+      await AsyncStorage.removeItem('userID');
+      await AsyncStorage.removeItem('email');
+      await AsyncStorage.removeItem('password');
+
+      await AsyncStorage.removeItem('selectedRole');
+      await AsyncStorage.removeItem('email');
+      await AsyncStorage.removeItem('pass');
+      // Navigate to the login or welcome screen
+      navigation.replace('Splash'); // Replace with your login or welcome screen name
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+// 
   const getDetails = async () => {
     const currentUser = firebase.auth().currentUser;
     if (currentUser) {
       const userId = currentUser.uid;
       await firebase.firestore()
-        .collection('Agency')
+        .collection(entity)
         .doc(userId)
         .get()
         .then((documentSnapshot) => {
@@ -39,25 +72,32 @@ const Setting = () => {
               latitude: data.location.latitude,
               longitude: data.location.longitude,
             });
+            console.log(userDetails,location)
           }
         })
         .catch((error) => {
           console.error('Error fetching user details: ', error);
         });
 
-        console.log(userDetails)
-        console.log(location)
+        
     }
     else{
       console.log("Not logged in")
     }
   };
-  
+  async function exec(){
+    // Fetch current user details from Firestore
+     await getEntity();
+     console.log(entity)
+
+    await getDetails();
+    console.log(userDetails)
+        console.log(location)
+  }
   useEffect(() => {
     // Fetch current user details from Firestore
-    getDetails();
-    
-  }, []);
+    exec()
+  }, [entity]);
 
   const handleUpdateDetails = () => {
     // Update user details in Firestore
@@ -65,7 +105,7 @@ const Setting = () => {
     if (currentUser) {
       const userId = currentUser.uid;
       firebase.firestore()
-        .collection('Agency')
+        .collection(entity)
         .doc(userId)
         .update({
           name: userDetails.name,
@@ -75,7 +115,7 @@ const Setting = () => {
           // Update other user details as needed
         })
         .then(() => {
-          console.log('User details updated successfully.');
+          Alert.alert('Updated', entity +' details updated successfully.');
           // You can add a success message or navigation logic here.
         })
         .catch((error) => {
@@ -85,14 +125,22 @@ const Setting = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <LinearGradient colors={['#7af0fc', '#c8faff', '#ffffff']} >
         <View style={styles.headcontents}>
           <Text style={styles.heading}>SETTINGS</Text>
           <Text style={styles.subheading}>Update your details</Text>
+          <TouchableOpacity style={{alignSelf:"flex-end",right:20,backgroundColor:'#4de6f6',borderRadius:10}} onPress={handleLogout}>
+            <View>
+              <Text style={{color:"white",padding:10,fontWeight: 'bold',}}>Logout</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </LinearGradient>
-
+      
+      {/* <View style={{alignSelf:"flex-end",right:20,backgroundColor:'#4de6f6'}}>
+              <Button title="Logout" onPress={handleLogout} />
+        </View>  */}
         <View style={styles.contents}>
 
           <View style={styles.input}>
@@ -131,7 +179,7 @@ const Setting = () => {
           />
           </View>
          
-        {location.latitude !== 0 && location.longitude !== 0 ? (
+        {entity==='Agency' &&location.latitude !== 0 && location.longitude !== 0 ? (
         <MapView
           style={styles.map}
           initialRegion={{
@@ -153,7 +201,7 @@ const Setting = () => {
             title="User Location"
           />
         </MapView>) : (
-        <Text>Loading map...</Text>
+        <Text></Text>
       )}
       {/* Add other input fields for aditional user details */}
 
@@ -164,7 +212,7 @@ const Setting = () => {
           </TouchableOpacity>
       </View> 
 
-    </ScrollView>
+    </View>
   );
 };
 
@@ -175,7 +223,7 @@ const styles = StyleSheet.create({
 
   },
   headcontents: {
-    marginVertical: 20,
+    marginVertical: 3,
   },
   heading: {
     fontSize: 30,
@@ -206,8 +254,8 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: 350,
-    marginBottom: 10,
-    marginTop: 10,
+    marginBottom: 5,
+    marginTop: 5,
   },
   button: {
     marginTop: 10,
@@ -223,7 +271,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: '#000',
+    color: 'white',
     justifyContent: 'center',
     alignSelf: "center",
     paddingHorizontal: 10,

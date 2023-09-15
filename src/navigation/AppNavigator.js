@@ -8,6 +8,7 @@ import Chats from '../../screens/Chats';
 import Chat from '../../screens/Chat';
 import Home from '../../screens/Home';
 import Bell from '../../tabs/Bell';
+import SignUp2 from '../../screens/SignUp2';
 const Stack = createStackNavigator()
 
 function AppNavigator(props) {
@@ -45,11 +46,11 @@ function AppNavigator(props) {
                  component={Home} 
                  options={{headerShown:false}}
                 />
-                {/* <Stack.Screen 
-                name={'Bell'}
-                 component={Bell} 
+                <Stack.Screen 
+                name={'SignUp2'}
+                 component={SignUp2} 
                  options={{headerShown:false}}
-                /> */}
+                />
                 
             </Stack.Navigator>
 
