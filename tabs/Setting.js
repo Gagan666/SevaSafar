@@ -130,11 +130,12 @@ const Setting = () => {
         <View style={styles.headcontents}>
           <Text style={styles.heading}>SETTINGS</Text>
           <Text style={styles.subheading}>Update your details</Text>
-          <TouchableOpacity style={{alignSelf:"flex-end",right:20,backgroundColor:'#4de6f6',borderRadius:10}} onPress={handleLogout}>
+          <TouchableOpacity style={{alignSelf:"flex-end",top:50,right:20,backgroundColor:'#4de6f6',borderRadius:10,position: 'absolute'}} onPress={handleLogout}>
             <View>
               <Text style={{color:"white",padding:10,fontWeight: 'bold',}}>Logout</Text>
             </View>
           </TouchableOpacity>
+          
         </View>
       </LinearGradient>
       
@@ -144,7 +145,7 @@ const Setting = () => {
         <View style={styles.contents}>
 
           <View style={styles.input}>
-          <IonIcon name="person" size={35} color="black" />
+          <IonIcon name="person" size={20} color="black" style={styles.icon}/>
           <TextInput
             style={{marginLeft: 15, fontSize: 18}}
             value={userDetails.name}
@@ -156,7 +157,7 @@ const Setting = () => {
           </View>
 
           <View style={styles.input}>
-          <IonIcon name="mail" size={35} color="black" />
+          <IonIcon name="mail" size={20} color="black" style={styles.icon}/>
           <TextInput
             style={{marginLeft: 15, fontSize: 18}}
             value={userDetails.email}
@@ -168,7 +169,7 @@ const Setting = () => {
           </View>
 
           <View style={styles.input}>
-          <IonIcon name="call" size={35} color="black" />
+          <IonIcon name="call" size={20} color="black" style={styles.icon}/>
           <TextInput
             style={{marginLeft: 15, fontSize: 18}}
             value={userDetails.mobile}
@@ -224,6 +225,7 @@ const styles = StyleSheet.create({
   },
   headcontents: {
     marginVertical: 3,
+    // flexDirection:'row',
   },
   heading: {
     fontSize: 30,
@@ -276,6 +278,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingHorizontal: 10,
     fontWeight: 'bold',
+  },
+  icon: {
+    marginTop: 15,
   },
 });
 

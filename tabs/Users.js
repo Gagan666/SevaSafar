@@ -89,17 +89,19 @@ function Users(props) {
       </View> 
       {/* </LinearGradient> */}
       <View style={styles.searchBox}>
-        <IonIcon name="search" size={40} color="black" style={styles.vector}/>
-        <LinearGradient style={styles.searchInput}
+        <IonIcon name="search" size={20} color="black" style={styles.vector}/>
+        {/* <LinearGradient style={styles.searchInput}
           colors={['#f5f5f5', '#c3eff8', '#7cc5ec']}
-          >   
+          >    */}
+          <View style={styles.input}>
           <TextInput
             placeholder="Search"
             value={searchQuery}
             onChangeText={handleSearch}
-            style={{textAlign:'center'}}
+            style={{textAlign:'center', fontSize: 15}}
           />
-        </LinearGradient>
+          </View>
+        {/* </LinearGradient> */}
       </View>
       
       {/* </View> */}
@@ -160,23 +162,38 @@ const styles = StyleSheet.create({
       height: 90,
       paddingLeft: 20,
       alignItems: 'center',
+      marginBottom: 10,
     },
     userIcon: {
       width: 40,
       height: 40,
     },
-    searchInput: {
-      borderWidth: 0.5,
-      borderColor: '#ccc',
-      borderRadius: 25,
-      width:"60%",
-      alignSelf:'center',
-      marginBottom: 20,
-      marginTop: 10,
-      padding: 10,
-      height: 42,
-      textAlign:'center',
+    input: {
+      flexDirection: 'row',
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      marginBottom: 16,
+      borderBottomColor: '#000',
+      borderBottomWidth: 1,
+      height: 50,
+      fontSize: 18,
+      width: '70%',
     },
+    // searchInput: {
+    //   borderWidth: 0.5,
+    //   borderColor: '#ccc',
+    //   borderRadius: 25,
+    //   width:"60%",
+    //   alignSelf:'center',
+    //   marginBottom: 20,
+    //   marginTop: 10,
+    //   padding: 10,
+    //   height: 42,
+    //   textAlign:'center',
+    //   backgroundColor: '#4de6f6',
+    //   // color: "#fff",
+      
+    // },
     searchBox: {
       flexDirection: 'row',
       marginHorizontal: 10,
@@ -192,6 +209,7 @@ const styles = StyleSheet.create({
     name: {
       color: 'black', 
       marginLeft: 20, 
-      fontSize: 20
+      fontSize: 20,
+      // marginBottom: 5,
     },
   });

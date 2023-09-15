@@ -62,7 +62,7 @@ const Maps = () => {
           console.log("%"+accept)
           // Update the state based on the "accept" value
           if(accept)
-          setMarkers([data.location,data.agencyLocation])
+          setMarkers([data.agencyLocation])
         console.log(markers)
         }
       });
@@ -114,12 +114,14 @@ const Maps = () => {
 
   return (
     <View style={styles.container}>
-      {/* Navbar */}
-      <View style={styles.navbar}>
-        {/* Add yo navigation bar content here */}
-        {/* Example: */}
-        <Text style={styles.navbarText}>My Map App</Text>
-      </View>
+    {/* Navbar */}
+    {/* <LinearGradient colors={['#7af0fc', '#c8faff', '#ffffff']} > */}
+    {/* <View style={styles.navbar}> */}
+      {/* Add yo navigation bar content here */}
+      {/* Example: */}
+      {/* <Text style={styles.navbarText}>My Map App</Text> */}
+    {/* </View> */}
+    {/* </LinearGradient> */}
 
 
 {(loading) ? (
@@ -140,6 +142,7 @@ const Maps = () => {
             coordinate={location}
             title="Your Location"
             description="You are here"
+            pinColor={'#4de6f6'}
           />
             {markers.map((marker, index) => (
               <Marker
@@ -158,9 +161,16 @@ const Maps = () => {
         )
       )}
       
-      <TouchableOpacity style={styles.sosButton} onPress={sendSos}>
+      {entity == 'Agency' ? (
+        // <ActivityIndicator size="large" color="#0000ff" />
+        <View></View>
+      ) : (
+        <TouchableOpacity style={styles.sosButton} onPress={sendSos}>
         {/* Your SOS button UI */}
+        <Text style={styles.sosText}>SOS</Text>
       </TouchableOpacity>
+      )}
+      
     </View>
   );
 };
@@ -174,24 +184,31 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#4de6f6',
   },
   navbarText: {
-    color: 'white', // Set the text color of your navbar
-    fontSize: 20,
+    marginTop: 20,
+    color: 'black', // Set the text color of your navbar
+    fontSize: 25,
   },
   map: {
     flex: 1,
   },
   sosButton: {
     position: 'absolute',
-    bottom: 16, // Adjust the position as needed
-    right: 16, // Adjust the position as needed
+    top: 50, // Adjust the position as needed
+    right: 25, // Adjust the position as needed
     backgroundColor: 'red', // Customize button style
-    borderRadius: 50, // Make it circular
-    width: 50,
-    height: 50,
+    borderRadius: 60, // Make it circular
+    width: 65,
+    height: 65,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  sosText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color:'white'
   },
 });
 

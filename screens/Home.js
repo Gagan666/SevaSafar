@@ -1,8 +1,11 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import checkLoginStatus from '../functions/checkLoginStatus';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View } from 'react-native';
 
 // Screens
 import Chats from './Chats';
@@ -18,6 +21,16 @@ const Tab = createBottomTabNavigator();
 
 function Home() {
     checkLoginStatus();
+    const[entity,setEntity] = useState("");
+
+    const getStoredValue = async () =>{
+      const ent = await AsyncStorage.getItem("selectedRole");
+      setEntity(ent);
+    }
+
+    React.useEffect(()=>{
+      getStoredValue();
+    },[])
   return (
     
       <Tab.Navigator
@@ -34,10 +47,10 @@ function Home() {
             let rn = route.name;
 
             if (rn === mapsName) {
-              iconName = focused ? 'home' : 'home-outline';
+              iconName = focused ? 'map' : 'map-outline';
 
             } else if (rn === chatName) {
-              iconName = focused ? 'list' : 'list-outline';
+              iconName = focused ? 'mail' : 'mail-outline';
 
             } else if (rn === settingsName) {
               iconName = focused ? 'settings' : 'settings-outline';
@@ -52,9 +65,10 @@ function Home() {
         >
 
         <Tab.Screen name={mapsName} component={Maps} options={{headerShown:false}}/>
-        <Tab.Screen name={chatName} component={Chats} options={{headerShown:false}}/>
+        { entity === 'Survivor' ? (<></>):( <Tab.Screen name={chatName} component={Chats} options={{headerShown:false}}/> )}
+        { entity === 'Survivor' ? (<></>):( <Tab.Screen name={alerts} component={Bell} options={{headerShown:false}}/> )}
         <Tab.Screen name={settingsName} component={Setting} options={{headerShown:false}}/>
-        <Tab.Screen name={alerts} component={Bell} options={{headerShown:false}}/>
+        
 
       </Tab.Navigator>
     
