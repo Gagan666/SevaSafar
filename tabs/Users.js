@@ -15,6 +15,8 @@ import {
   import {useIsFocused, useNavigation} from '@react-navigation/native';
   import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TextInput } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 function Users(props) {
     const [users, setUsers] = useState([]);
@@ -73,38 +75,57 @@ function Users(props) {
       // console.log(users)
 
     return (
+     
         <View
       style={[
         styles.container,
         {backgroundColor: mode == 'LIGHT' ? 'white' : '#212121'},
       ]}>
+      
+      {/* <LinearGradient colors={['#7af0fc', '#c8faff', '#ffffff']} > */}
+      {/* <View > */}
       <View style={styles.header}>
         <Text style={styles.title}>INBOX</Text>
       </View> 
+      {/* </LinearGradient> */}
+      <View style={styles.searchBox}>
+        <IonIcon name="search" size={40} color="black" style={styles.vector}/>
+        <LinearGradient style={styles.searchInput}
+          colors={['#f5f5f5', '#c3eff8', '#7cc5ec']}
+          >   
+          <TextInput
+            placeholder="Search"
+            value={searchQuery}
+            onChangeText={handleSearch}
+            style={{textAlign:'center'}}
+          />
+        </LinearGradient>
+      </View>
+      
+      {/* </View> */}
+      
 
       <View>
-      <TextInput
-        placeholder="Search for a user"
-        value={searchQuery}
-        onChangeText={handleSearch}
-        style={styles.searchInput}
-      />
         <FlatList
           data={filteredUsers}
           renderItem={({item, index}) => {
             return (
-
+            <LinearGradient 
+              colors={['#ffffff', '#efefef', '#e1e1e1']}
+              >
               <TouchableOpacity
-                style={[styles.userItem, {backgroundColor: 'white'}]}
+                style={[styles.userItem]}
                 onPress={() => {
                   navigation.navigate('Chat', {data: item, email: email});
                 }}>
-                <Image
+                {/* <Image
                   source={require('../assets/images/user.png')}
                   style={styles.userIcon}
-                />
+                /> */}
+                <IonIcon name="person" size={33} color="black" />
                 <Text style={styles.name}>{item.name}</Text>
               </TouchableOpacity>
+            </LinearGradient>
             );
           }}
         />
@@ -123,7 +144,6 @@ const styles = StyleSheet.create({
       width: '100%',
       height: 60,
       backgroundColor: 'white',
-      // elevation: 5,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -138,24 +158,40 @@ const styles = StyleSheet.create({
       marginBottom: 3,
       flexDirection: 'row',
       height: 90,
-      // borderWidth: 0.5,
-      // borderRadius: 10,
       paddingLeft: 20,
       alignItems: 'center',
-      elevation: 10, 
     },
     userIcon: {
       width: 40,
       height: 40,
     },
     searchInput: {
-      paddingHorizontal: 8,
-      borderWidth: 1,
+      borderWidth: 0.5,
       borderColor: '#ccc',
-      borderRadius: 8,
-      width:"70%",
+      borderRadius: 25,
+      width:"60%",
       alignSelf:'center',
-      marginTop:16
+      marginBottom: 20,
+      marginTop: 10,
+      padding: 10,
+      height: 42,
+      textAlign:'center',
     },
-    name: {color: 'black', marginLeft: 20, fontSize: 20},
+    searchBox: {
+      flexDirection: 'row',
+      marginHorizontal: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+
+    },
+    vector: {
+      marginRight: 3,
+      marginBottom: 7,
+
+    },
+    name: {
+      color: 'black', 
+      marginLeft: 20, 
+      fontSize: 20
+    },
   });

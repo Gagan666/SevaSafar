@@ -80,7 +80,7 @@ function SignUp(props) {
           };
           console.log(userDetails)
           await firebase.firestore().collection(entity).doc(user.uid).set(userDetails);
-
+          Alert.alert('Message', 'Registered Successfully');
           // Navigate to the next screen or perform other actions
         } else {
           Alert.alert('Error', 'Email or mobile number already registered');

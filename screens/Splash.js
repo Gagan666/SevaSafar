@@ -48,19 +48,15 @@ function Splash(props) {
               <Text style={styles.titleTag}>"Strength in Unity{"\n"}Relief in Diversity"</Text>
             </View>
             <View style={styles.buttonContainer} >
-            <TouchableOpacity onPress={()=>{storeData('Agency');navigation.navigate("SignUp")}}>
-            <LinearGradient
-              colors={['#aeeef5', '#b8eef0', '#ffffff']}
-              style={styles.button}>
-              <Text style={styles.text}>AGENCY</Text>
-            </LinearGradient>
+            <TouchableOpacity style={styles.button} onPress={()=>{storeData('Agency');navigation.navigate("SignUp")}}>
+            
+              <Text style={[styles.text]}>AGENCY</Text>
+            
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{storeData('Survivor');navigation.navigate("SignUp")}}>
-            <LinearGradient
-              colors={['#ffffff', '#ebf5f5', '#b8eef0']}
-              style={styles.button}>
-              <Text style={styles.text}>SURVIVOR</Text>
-            </LinearGradient>
+            <TouchableOpacity style={styles.button} onPress={()=>{storeData('Survivor');navigation.navigate("SignUp")}}>
+            
+              <Text style={[styles.text]}>SURVIVOR</Text>
+            
             </TouchableOpacity>
             </View>
         </View>
@@ -88,8 +84,8 @@ const styles = StyleSheet.create({
     },
     appLogo: {
         alignSelf: 'flex-end',
-        height: 120,
-        width: 120,
+        height: 100,
+        width: 100,
         marginTop: 30,
         marginRight: 30,
         position: 'absolute',
@@ -100,23 +96,29 @@ const styles = StyleSheet.create({
         textAlign:"center",
     },
     titleTag: {
-        fontSize:30,
+        fontSize:20,
         color:"black",
         textAlign:"center",
         marginBottom: 50,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
     button: {
-      padding: 15,
-      height: 70,
+      marginTop: 25,
+      padding: 10,
+      height: 50,
       borderRadius: 30,
-      alignSelf: "center",
-      alignItems:"center",
-      margin: 10,
+      marginHorizontal: 10,
+      justifyContent: 'center',
+      elevation: 6,
+      backgroundColor: '#4de6f6',
     },
     text: {
-      backgroundColor: 'transparent',
-      fontSize: 25,
+      fontSize: 20,
       color: '#000',
+      justifyContent: 'center',
+      alignSelf: "center",
+      paddingHorizontal: 10,
     },
 })
 export default Splash;
