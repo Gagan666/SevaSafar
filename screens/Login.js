@@ -1,10 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState,useEffect  } from "react";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 // import { auth } from "../firebase";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import firebase from 'firebase/compat/app'; // Import the Firebase app module
 import 'firebase/compat/auth';
@@ -69,32 +70,37 @@ function Login(props) {
   
    
     return (
-        <KeyboardAvoidingView style={styles.container}>
+      <KeyboardAvoidingView style={styles.container}>
 
-        
-        <View>
-      <Text style={styles.title}>{entity} Login</Text>
-    
-      <TextInput
-        placeholder="Enter Email"
-        style={[{ marginTop: 20 }, styles.input]}
-        value={email}
-        onChangeText={txt=>setEmail(txt)}
-      />
+        <LinearGradient colors={['#aeeef5', '#ffffff', '#ffffff']}>  
+          <View>
+          <Image source={require("../assets/images/logo.png")} style={styles.appLogo} />
+          <Text style={styles.title}>{entity.toUpperCase()}{" "} LOGIN</Text>
+          <TextInput
+            placeholder="Email"
+            style={[{ marginTop: 20 }, styles.input]}
+            value={email}
+            onChangeText={txt=>setEmail(txt)}
+          />
      
-      <TextInput
-        placeholder="Enter Password"
-        style={[{ marginTop: 20 }, styles.input]}
-        value={pass}
-        onChangeText={txt=>setPass(txt)}
-      />
+          <TextInput
+            placeholder="Password"
+            style={[{ marginTop: 20 }, styles.input]}
+            value={pass}
+            onChangeText={txt=>setPass(txt)}
+          />
       
-      <TouchableOpacity style={styles.btn} onPress={handleLogin}>
-        <Text style={styles.btn_txt}>Login</Text>
-      </TouchableOpacity>
-      <Text style={styles.orLogin} onPress={()=>{navigation.navigate("SignUp")}}>Or SignUp</Text>
-    </View>
-    </KeyboardAvoidingView>
+          <TouchableOpacity onPress={handleLogin}>
+            <LinearGradient
+              colors={['#ffffff', '#ebf5f5', '#b8eef0']}
+              style={styles.button}>
+              <Text style={styles.text}>LOGIN</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+          <Text style={styles.orLogin} onPress={()=>{navigation.navigate("SignUp")}}>Or SignUp</Text>
+          </View>
+        </LinearGradient>
+      </KeyboardAvoidingView>
     );
 }
 
@@ -105,32 +111,62 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
     },
     title: {
-      fontSize: 40,
+      fontSize: 38,
+      fontWeight: 'bold',
       color: "black",
       alignSelf: "center",
-      marginTop: 100,
+      // marginTop: 80,
+      // marginLeft:20,
+      // marginRight: 60,
+      marginBottom: 80,
+      // position: 'relative',
+    },
+    appLogo: {
+      alignSelf: 'flex-end',
+      height: 120,
+      width: 120,
+      marginTop: 30,
+      marginRight: 10,
+      // position: 'absolute',
     },
     input: {
       width: "90%",
       borderWidth: 0.5,
-      borderRadius: 10,
+      borderRadius: 25,
       alignSelf: "center",
       height: 50,
       paddingLeft: 20,
+      textAlign:'center',
+      fontSize: 25,
     },
-    btn: {
-      width: "90%",
-      height: 50,
-      borderRadius: 10,
+    // btn: {
+    //   width: "90%",
+    //   height: 50,
+    //   borderRadius: 10,
+    //   alignSelf: "center",
+    //   marginTop: 50,
+    //   backgroundColor: "orange",
+    //   alignItems: "center",
+    //   justifyContent: "center",
+    // },
+    // btn_txt: {
+    //   fontSize: 20,
+    //   color: "black",
+    // },
+    button: {
+      padding: 15,
+      height: 60,
+      borderRadius: 30,
       alignSelf: "center",
-      marginTop: 50,
-      backgroundColor: "orange",
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems:"center",
+      margin: 10,
+      marginTop: 20,
     },
-    btn_txt: {
-      fontSize: 20,
-      color: "black",
+    text: {
+      backgroundColor: 'transparent',
+      fontSize: 25,
+      color: '#000',
+      marginHorizontal: 60,
     },
     orLogin: {
       fontSize: 20,

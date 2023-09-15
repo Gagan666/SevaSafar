@@ -79,7 +79,7 @@ function Users(props) {
         {backgroundColor: mode == 'LIGHT' ? 'white' : '#212121'},
       ]}>
       <View style={styles.header}>
-        <Text style={styles.title}>RN Firebase Chat App</Text>
+        <Text style={styles.title}>INBOX</Text>
       </View> 
 
       <View>
@@ -123,25 +123,26 @@ const styles = StyleSheet.create({
       width: '100%',
       height: 60,
       backgroundColor: 'white',
-      elevation: 5,
+      // elevation: 5,
       justifyContent: 'center',
       alignItems: 'center',
     },
     title: {
-      color: 'purple',
-      fontSize: 20,
-      fontWeight: '600',
+      color: 'black',
+      fontSize: 30,
+      fontWeight: 'bold',
     },
     userItem: {
-      width: Dimensions.get('window').width - 50,
-      alignSelf: 'center',
-      marginTop: 20,
+      // width: Dimensions.get('window').width - 20,
+      alignSelf: 'stretch',
+      marginBottom: 3,
       flexDirection: 'row',
-      height: 60,
-      borderWidth: 0.5,
-      borderRadius: 10,
+      height: 90,
+      // borderWidth: 0.5,
+      // borderRadius: 10,
       paddingLeft: 20,
       alignItems: 'center',
+      elevation: 10, 
     },
     userIcon: {
       width: 40,

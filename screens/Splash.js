@@ -1,6 +1,6 @@
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { Text, View,StyleSheet } from 'react-native';
+import { Text, View,StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
@@ -8,6 +8,7 @@ import firebase from 'firebase/compat/app'; // Import the Firebase app modle
 import 'firebase/compat/auth'; 
 import checkLoginStatus from '../functions/checkLoginStatus';
 import * as Permissions from 'expo-permissions';
+import { LinearGradient } from 'expo-linear-gradient';
 
 function Splash(props) {
   const [entity, setEntity] = useState('');
@@ -36,10 +37,32 @@ function Splash(props) {
     
     return (
         <View style={styles.container}>
-            <Text style={styles.logo}>FireBase Chat App</Text>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Agency');navigation.navigate("SignUp",{entity:"Agency"})}}><Text style={styles.btn_txt}>Agent</Text></TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={()=>{storeData('Survivor');navigation.navigate("SignUp",{entity:"Survivor"})}}><Text style={styles.btn_txt}>Survivor</Text></TouchableOpacity>
-
+            <View> 
+            <Image
+              source={require("../assets/images/backgroundimg(1).jpg")}  
+              style={styles.backgroundImage} 
+            />
+            <Image source={require("../assets/images/logo.png")} style={styles.appLogo} />
+            </View>
+            <View >
+              <Text style={styles.titleTag}>"Strength in Unity{"\n"}Relief in Diversity"</Text>
+            </View>
+            <View style={styles.buttonContainer} >
+            <TouchableOpacity onPress={()=>{storeData('Agency');navigation.navigate("SignUp")}}>
+            <LinearGradient
+              colors={['#aeeef5', '#b8eef0', '#ffffff']}
+              style={styles.button}>
+              <Text style={styles.text}>AGENCY</Text>
+            </LinearGradient>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={()=>{storeData('Survivor');navigation.navigate("SignUp")}}>
+            <LinearGradient
+              colors={['#ffffff', '#ebf5f5', '#b8eef0']}
+              style={styles.button}>
+              <Text style={styles.text}>SURVIVOR</Text>
+            </LinearGradient>
+            </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -47,28 +70,53 @@ function Splash(props) {
 const styles = StyleSheet.create({
     container:{
         flex:1,
-        backgroundColor:"orange",
-        justifyContent:'center'
+        backgroundColor:"#fff",
+        justifyContent:'flex-start',
+        flexDirection: 'column',
     },
-    logo:{
-        fontSize:40,
-        color:"white",
-        textAlign:"center"
-    },
-    btn:{
-        // width: "90%",
-        height: 50,
-        width:"80%",
-        borderRadius: 10,
-        alignSelf: "center",
-        marginTop: 50,
-        backgroundColor: "red",
+    backgroundImage: {
         justifyContent:'center',
-        alignItems:"center"
+        width: '100%',
+        height: 550, 
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        marginBottom: 15,
     },
-    btn_txt:{
-
-        color:"white"
-    }
+    buttonContainer: {
+        justifyContent:'center',
+        flexDirection: 'row',
+    },
+    appLogo: {
+        alignSelf: 'flex-end',
+        height: 120,
+        width: 120,
+        marginTop: 30,
+        marginRight: 30,
+        position: 'absolute',
+    },
+    centerText: {
+        fontSize:40,
+        color:"black",
+        textAlign:"center",
+    },
+    titleTag: {
+        fontSize:30,
+        color:"black",
+        textAlign:"center",
+        marginBottom: 50,
+    },
+    button: {
+      padding: 15,
+      height: 70,
+      borderRadius: 30,
+      alignSelf: "center",
+      alignItems:"center",
+      margin: 10,
+    },
+    text: {
+      backgroundColor: 'transparent',
+      fontSize: 25,
+      color: '#000',
+    },
 })
 export default Splash;
