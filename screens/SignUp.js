@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState,useEffect } from "react";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase/compat/app';
@@ -13,6 +13,8 @@ import Geolocation from 'react-native-geolocation-service';
 import * as Location from 'expo-location';
 import { ScrollView } from "react-native-gesture-handler";
 import checkLoginStatus from "../functions/checkLoginStatus";
+import { LinearGradient } from 'expo-linear-gradient';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 function SignUp(props) {
   const [name, setName] = useState("");
@@ -106,46 +108,76 @@ function SignUp(props) {
 
   return (
   
-    <View style={{marginTop:10,flex:1}}>
+    <View style={{flex:1}}>
     <ScrollView contentContainerStyle={styles.container}>
-    
-    <Text style={styles.header}>{entity} Registration</Text>
+
+    <LinearGradient colors={['#7af0fc', '#c8faff', '#ffffff']} >
+      <View style={styles.headcontents}>
+        
+        <Image source={require("../assets/images/logo.png")} style={styles.appLogo} />
+        <Text style={styles.heading}>{entity} {'\n'}Registration</Text>
+      </View>
+    </LinearGradient>
+
+    <View style={styles.contents}>
+
+      <View style={styles.input}>
+      <IonIcon name="person" size={35} color="black" />
       <TextInput
-        style={styles.input}
-        placeholder="Agency Name"
+        style={{marginLeft: 15, fontSize: 18}}
+        placeholder="Name"
         value={name}
         onChangeText={(text) => setName(text)}
       />
+      </View>
+
+      <View style={styles.input}>
+      <IonIcon name="mail" size={35} color="black" />
       <TextInput
-        style={styles.input}
-        placeholder="Agency Email"
+        style={{marginLeft: 15, fontSize: 18}}
+        placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
+      </View>
+
+      <View style={styles.input}>
+      <IonIcon name="call" size={35} color="black" />
       <TextInput
-        style={styles.input}
-        placeholder="Agency Mobile Number"
+        style={{marginLeft: 15, fontSize: 18}}
+        placeholder="Mobile Number"
         value={mobile}
         onChangeText={(text) => setMobile(text)}
       />
+      </View>
+
+      <View style={styles.input}>
+      <IonIcon name="key" size={35} color="black" />
       <TextInput
-        style={styles.input}
+        style={{marginLeft: 15, fontSize: 18}}
         placeholder="Password"
         secureTextEntry={true}
         value={pass}
         onChangeText={(text) => setPass(text)}
       />
+      </View>
+
+      <View style={styles.input}>
+      <IonIcon name="key" size={35} color="black" />
       <TextInput
-        style={styles.input}
+        style={{marginLeft: 15, fontSize: 18}}
         placeholder="Confirm Password"
         secureTextEntry={true}
         value={ConfPass}
         onChangeText={(text) => setConfPass(text)}
       />
-      <Text style={styles.header}>Enter Location</Text>
-      <TouchableOpacity onPress={getCurrentLocation} style={[styles.button,{marginBottom:20}]}>
-            <Text style={[styles.buttonText]}>Get Current Location</Text>
-          </TouchableOpacity>
+      </View>
+
+      <Text style={[styles.locheading]}>Enter Location</Text>
+      <TouchableOpacity style={styles.button} onPress={getCurrentLocation} >
+      {/* style={[styles.button,{marginBottom:20}]} */}
+        <Text style={styles.text}>Get Current Location</Text>
+      </TouchableOpacity>
     
       <MapView
         style={styles.map}
@@ -160,12 +192,15 @@ function SignUp(props) {
           setLocation(e.nativeEvent.coordinate)}}
       ><Marker coordinate={location} /></MapView>
       
-      <TouchableOpacity style={styles.SignUpbtn} onPress={handleSignup}>
-        <Text style={styles.btn_txt}>Sign Up</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <Text style={styles.text}>Sign Up</Text>
       </TouchableOpacity>
+      <Text style={styles.donthaveaccount}>Already have an account?</Text>
       <Text style={styles.orLogin} onPress={()=>{navigation.replace("Login",{propKey:entity})}}>
-        Or Login
+        Login
       </Text>
+
+      </View>
     </ScrollView>
     </View>
 
@@ -174,53 +209,98 @@ function SignUp(props) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: 'center',
-    padding: 40,
+    // alignItems: 'center',
+    // padding: 20,
+    backgroundColor: 'white',
   },
-  header: {
-    fontSize: 24,
+  heading: {
+    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 20,
+    color: "black",
+    // alignSelf: "left",
+    marginTop: 30,
+    marginRight: 80,
+    // justifyContent: 'left',
+  },
+  locheading: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: "black",
+    alignSelf: "center",
+    marginTop: 10,
+  },
+  headcontents: {
+    marginVertical: 15,
+    flexDirection: 'row-reverse',
+  },
+  contents: {
+    padding: 25,
   },
   input: {
-    width: '100%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    flexDirection: 'row',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+    height: 50,
+    fontSize: 18,
   },
   map: {
     width: '100%',
-    height: 200,
-    marginBottom: 20,
+    height: 300,
+    marginTop: 10,
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: 'blue',
+    marginTop: 15,
+    marginBottom: 15,
     padding: 10,
-    borderRadius: 10,
+    height: 50,
+    width: 250,
+    borderRadius: 30,
+    marginHorizontal: 10,
+    justifyContent: 'center',
+    alignSelf: "center",
+    elevation: 6,
+    backgroundColor: '#4de6f6',
   },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
+  text: {
+    fontSize: 20,
+    color: '#000',
+    justifyContent: 'center',
+    alignSelf: "center",
+    paddingHorizontal: 10,
   },
   orLogin: {
-    fontSize: 20,
+    fontSize: 24,
     alignSelf: "center",
-    marginTop: 50,
-    textDecorationLine: "underline",
-    fontWeight: "600",
+    marginTop: 2,
+    // textDecorationLine: "underline",
+    fontWeight: "bold",
   },
-  SignUpbtn:{
-    width: "90%",
-      height: 50,
-      borderRadius: 10,
-      alignSelf: "center",
-      marginTop: 50,
-      backgroundColor: "orange",
-      alignItems: "center",
-      justifyContent: "center",
-  }
+  // SignUpbtn:{
+  //   width: "90%",
+  //     height: 50,
+  //     borderRadius: 10,
+  //     alignSelf: "center",
+  //     marginTop: 10,
+  //     backgroundColor: "orange",
+  //     alignItems: "center",
+  //     justifyContent: "center",
+  // },
+  appLogo: {
+      alignSelf: 'flex-end',
+      height: 100,
+      width: 100,
+      marginTop: 10,
+      marginRight: 5,
+      // position: 'absolute',
+  },
+  donthaveaccount: {
+    fontSize: 19,
+    alignSelf: 'center',
+    marginTop: 30,
+  },
 });
 export default SignUp;
