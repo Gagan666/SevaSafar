@@ -65,7 +65,7 @@ const acceptReq  = async (userId) =>{
       console.log(data.location)
       await helpCollection
       .doc(userId)
-      .update({ agencyHelp: true,agencyLocation:{latitude:data.location.latitude,longitude:data.location.longitude} })
+      .update({ agencyHelp: true,agencyLocation:{latitude:data.location.latitude,longitude:data.location.longitude}, name: data.name })
       .then(() => {
         console.log('Value "agencyHelp" updated successfully.');
       })
@@ -81,6 +81,12 @@ const acceptReq  = async (userId) =>{
         .catch((error) => {
           console.error('Error deleting document:', error);
         });
+          
+  // setLoading(false);
+  
+  
+  initNoti();
+  // setLoading(true);
     } else {
       // Document doesn't exist for the specified user ID
       console.log('Document does not exist.');
@@ -89,12 +95,7 @@ const acceptReq  = async (userId) =>{
   .catch((error) => {
     console.error('Error getting location data:', error);
   });
-  
-  setLoading(false);
-  
-  
-  initNoti();
-  setLoading(true);
+
 }
   
   useEffect(() => {
