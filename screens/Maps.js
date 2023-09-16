@@ -1,5 +1,5 @@
 import React, { useDebugValue, useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator,TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator,TouchableOpacity, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
@@ -8,9 +8,11 @@ import 'firebase/compat/firestore';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { async } from '@firebase/util';
 const Maps = () => {
     const [markers, setMarkers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [accept, setAccept] = useState(false);
     const[location,setLocation]=useState([]);
     const [entity,setEntity] = useState('');
     const [isLocationReady, setIsLocationReady] = useState(false);
@@ -23,12 +25,13 @@ const Maps = () => {
             setEntity(ent);
           const querySnapshot = await firebase.firestore().collection('Agency').get();
           const marker = [];
-          querySnapshot.forEach((documentSnapshot) => {
+          querySnapshot.forEach( (documentSnapshot) => {
             // Access the data of eachdocument
-            const data = documentSnapshot.data();
+            const data =  documentSnapshot.data();
             // console.log(data);
             if(data?.location){
-                marker.push(data.location);
+                marker.push(data);
+                console.log(data)
             }
             // agencies.push(data);
           });
@@ -60,9 +63,12 @@ const Maps = () => {
           const data = doc.data();
           const accept = data.agencyHelp || false; // Default to false if "accept" is not present
           console.log("%"+accept)
+          setAccept(accept)
           // Update the state based on the "accept" value
-          if(accept)
-          setMarkers([data.agencyLocation])
+          if(accept){
+            Alert.alert("Message","Help on the way see the map")
+            setMarkers([{location: data.agencyLocation,name:data.name}])
+          }
         console.log(markers)
         }
       });
@@ -76,7 +82,7 @@ const Maps = () => {
     
        if(status=='granted'){
          console.log("yes")
-         const loc = await Location.getCurrentPositionAsync({});
+         const loc = await Location.getLastKnownPositionAsync({});
          console.log("asda"+loc)
         //  const locCoor = {
         //    latitude:loc.coords.latitude, 
@@ -131,8 +137,8 @@ const Maps = () => {
             <MapView
             style={styles.map}
             initialRegion={{
-              latitude: markers[0].latitude,
-              longitude: markers[0].longitude,
+              latitude: markers[0].location.latitude,
+              longitude: markers[0].location.longitude,
               latitudeDelta: 0.222,
               longitudeDelta: 0.221,
             }}
@@ -148,10 +154,10 @@ const Maps = () => {
               <Marker
                 key={index}
                 coordinate={{
-                  latitude: marker.latitude,
-                  longitude: marker.longitude,
+                  latitude: marker.location.latitude,
+                  longitude: marker.location.longitude,
                 }}
-                title={"Agency"}
+                title={marker.name}
                 description={"Agency Location"}
               />
             ))}
@@ -161,7 +167,7 @@ const Maps = () => {
         )
       )}
       
-      {entity == 'Agency' ? (
+      {entity == 'Agency' || accept===true ? (
         // <ActivityIndicator size="large" color="#0000ff" />
         <View></View>
       ) : (
